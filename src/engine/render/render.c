@@ -30,7 +30,7 @@ void window_init(Global * global){
     
 }
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn){
+void mouse_callback(GLFWwindow* window, f64 xposIn, f64 yposIn){
     f32 xpos = (f32)xposIn; f32 ypos = (f32)yposIn;
     moveCamera(xpos,ypos,&global.camera);
     /*
@@ -73,17 +73,18 @@ void processInput(GLFWwindow *window, Camera *c){
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     }
     if(glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS){
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
-    }
-    if(glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS){
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); 
+        glm_vec3_copy((vec3){0.0,0.0,4.0},c->pos);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-        glm_vec3_mul(c->front,c->speed,dest);
+        glm_vec3_mul(c->front,(vec3){c->speed[0],0.0,c->speed[2]},dest);
+        glm_vec3_normalize(dest);
+        glm_vec3_mul(dest,(vec3){c->speed[0],0.0,c->speed[2]},dest);
         glm_vec3_add(c->pos,dest,c->pos);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-        glm_vec3_mul(c->front,c->speed,dest);
+        glm_vec3_mul(c->front,(vec3){c->speed[0],0.0,c->speed[2]},dest);
+        glm_vec3_normalize(dest);
+        glm_vec3_mul(dest,(vec3){c->speed[0],0.0,c->speed[2]},dest);
         glm_vec3_sub(c->pos,dest,c->pos);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
@@ -93,5 +94,13 @@ void processInput(GLFWwindow *window, Camera *c){
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
         glm_cross(c->front,c->up,dest); glm_normalize(dest);
         glm_vec3_mul(dest,c->speed,dest); glm_vec3_add(c->pos,dest,c->pos);
+    }
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+        glm_vec3_add(c->up, (vec3){0.0f,0.1f,0.0f}, dest);
+        glm_normalize(dest); glm_vec3_mul(dest,c->speed,dest); glm_vec3_add(c->pos,dest,c->pos);
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+        glm_vec3_add(c->up, (vec3){0.0f,0.1f,0.0f}, dest);
+        glm_normalize(dest); glm_vec3_mul(dest,c->speed,dest); glm_vec3_sub(c->pos,dest,c->pos);
     }
 }

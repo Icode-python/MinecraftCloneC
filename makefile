@@ -8,7 +8,7 @@ out_file = game
 .PHONY: build
 build:
 	gcc -c $(lib_files) $(src_files) $(include) $(lib) $(libs)
-	gcc *.o -o $(out_file) -Wall $(include) $(lib) $(libs)
+	gcc *.o -o $(out_file) -Wall -O2 $(include) $(lib) $(libs)
 	rm *.o
 	./$(out_file)
 

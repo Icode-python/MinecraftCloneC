@@ -27,7 +27,7 @@ void insertArrayChar(Array *a, char element) {
 void insertArrayFloat(Array *a, f32 element){
   if (a->used == a->size) {
     a->size *= 2;
-    a->fArray = realloc(a->fArray, a->size * sizeof(char));
+    a->fArray = realloc(a->fArray, a->size * sizeof(f32));
   }
   a->fArray[a->used++] = element;
 }
@@ -35,7 +35,7 @@ void insertArrayFloat(Array *a, f32 element){
 void insertArrayU32(Array *a, u32 element){
   if (a->used == a->size) {
     a->size *= 2;
-    a->iArray = realloc(a->iArray, a->size * sizeof(char));
+    a->iArray = realloc(a->iArray, a->size * sizeof(u32));
   }
   a->iArray[a->used++] = element;
 }

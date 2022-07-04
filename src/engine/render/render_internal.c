@@ -74,5 +74,22 @@ int texInit(const char * path, u32 * texture, bool flip, bool has_rgba){
     stbi_image_free(data);
 }
 
-void render_begin();
-void render_end();
+void setupObject(Object * obj, vec3 pos, Shader *shader, u32 texture, f32 vertices[200], Render_Internal * r){
+    memcpy(obj->vertices, vertices, sizeof(obj->vertices));
+    objectRendererInit(obj,r);
+    obj->shader.ID = shader->ID;
+    obj->texture = texture;
+    glm_vec3_copy(pos,obj->pos);
+}
+
+void set_render(Object * obj, Camera * c){
+    use(obj->shader.ID); 
+    setInt("texture1", 0, obj->shader.ID);
+    glBindTexture(GL_TEXTURE_2D, obj->texture);
+    setMat4("projection", c->projection, obj->shader.ID);
+    setMat4("view", c->view, obj->shader.ID);
+}
+void render(Object * obj, Render_Internal * r){
+    glBindVertexArray(r->VAO.iArray[obj->arrayBuffer]);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}

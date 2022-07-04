@@ -8,11 +8,16 @@
 #include <stdbool.h>
 #include <types.h>
 #include <render/render.h>
+#include <cglm/cglm.h>
+#include <cglm/mat4.h>
+#include <cglm/types.h>
+#include <render/camera.h>
 
 typedef struct object {
     Shader shader;
     u32 texture;
-    float vertices[1000];
+    vec3 pos;
+    f32 vertices[1000];
     u32 indices[12];
     u32 arrayBuffer;
 } Object;
@@ -29,9 +34,10 @@ typedef struct render {
     f32 height;
 } Render;
 
+void setupObject(Object * obj, vec3 pos, Shader *shader, u32 texture, f32 vertices[200], Render_Internal * r);
 int objectRendererInit(Object * obj, Render_Internal * r);
 int renderInternalInit(Render_Internal * r, size_t size);
-void render_begin();
-void render_end();
+void set_render(Object * obj, Camera * c);
+void render(Object * obj, Render_Internal * r);
 
 #endif

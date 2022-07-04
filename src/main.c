@@ -28,10 +28,7 @@ int main(int argc, char * argv[]){
     window_init(&global);
     renderInternalInit(&global.renderInternal,1);
     
-    Object obj; u32 texture1, texture2;
-
-    const char * fragfile = "shaders/triangleShader.frag"; const char * vertfile = "shaders/triangleShader.vert";
-    setUpShaders(vertfile, fragfile, &obj.shader);
+    Object obj[10][10];
     f32 vertices[180] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -76,70 +73,44 @@ int main(int argc, char * argv[]){
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
-    vec3 cubePositions[] = {
-        { 0.0f,  0.0f,  0.0f},
-        { 2.0f,  5.0f, -15.0f},
-        {-1.5f, -2.2f, -2.5f},
-        {-3.8f, -2.0f, -12.3f},
-        { 2.4f, -0.4f, -3.5f},
-        {-1.7f,  3.0f, -7.5f},
-        { 1.3f, -2.0f, -2.5f},
-        { 1.5f,  2.0f, -2.5f},
-        { 1.5f,  0.2f, -1.5f},
-        {-1.3f,  1.0f, -1.5f}
-    };
-    memcpy(obj.vertices, vertices, sizeof(obj.vertices));
+    vec3 cubePositions[10][10];
+    for(int x=0; x<=10; x++){
+        for(int y=0; y<=10; y++){
+            glm_vec3_copy((vec3){(f32)x, -2, (f32)y},cubePositions[x][y]); 
+        }
+    }
+    u32 wall_texture;
+    Shader shader;
+    texInit((const char *)"shaders/wall.jpg", &wall_texture, false, false);
+    setUpShaders((const char *)"shaders/triangleShader.vert", (const char *)"shaders/triangleShader.frag", &shader);
+    for(int x=0; x<10; x++){
+        for(int y=0; y<10; y++){
+            
+            setupObject(&obj[x][y], cubePositions[x][y], &shader, wall_texture,vertices,&global.renderInternal);
+        }
+    }
     //memcpy(obj.indices, indices, sizeof(obj.indices));
-
-    objectRendererInit(&obj,&global.renderInternal);
-    texInit((const char *)"shaders/container.jpg", &obj.texture, false, false);
-    texInit((const char *)"shaders/awesomeface.png", &texture2, true, true);
-    texture1 = obj.texture;
-
-    use(obj.shader.ID); 
-    setInt("texture1", 0, obj.shader.ID);
-    setInt("texture2", 1, obj.shader.ID);
-    setMat4("projection", global.camera.projection, obj.shader.ID);
 
     while(!glfwWindowShouldClose(global.renderer.window)){
         processInput(global.renderer.window,&global.camera);
+        setCameraView(&global.camera,global.renderer.width,global.renderer.height);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, obj.texture);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-
-
-        use(obj.shader.ID);
-        mat4 view;
-        vec3 addvec;
-        glm_vec3_add(global.camera.pos, global.camera.front, addvec);
-        glm_lookat(global.camera.pos, addvec, global.camera.up, view);
-        setMat4("view", view, obj.shader.ID);
-        glm_perspective(glm_rad(45.0f), global.renderer.width / global.renderer.height, 0.1f, 100.0f, global.camera.projection);        
-
-        //mat4 view  = GLM_MAT4_IDENTITY_INIT;
-        //glm_translate(view, (vec3){0.0f, 0.0f, -3.0f});
-        //u32 viewLoc  = glGetUniformLocation(obj.shader.ID, "view");
-        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-
-        for (u32 i = 0; i < 10; i++){
-            mat4 model = GLM_MAT4_IDENTITY_INIT; f32 angle;
-            glm_translate(model, cubePositions[i]);
-            if(i % 3==0){angle = 20.0f * (i+1);}
-            else{angle=0.0f;}
-            glm_rotate(model, (f32)glfwGetTime() * glm_rad(angle), (vec3){1.0f, 0.3f, 0.5f});  
-            setMat4("model", model,obj.shader.ID);
-
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+        for(int x=0; x<10; x++){
+            for(int y=0; y<10; y++){
+                set_render(&obj[x][y],&global.camera);
+                use(obj[x][y].shader.ID);
+                
+                mat4 model = GLM_MAT4_IDENTITY_INIT;
+                glm_translate(model, cubePositions[x][y]);
+                setMat4("model", model,obj[x][y].shader.ID);
+                
+                render(&obj[x][y], &global.renderInternal);
+            }
         }
 
-
-        glBindVertexArray(global.renderInternal.VAO.iArray[obj.arrayBuffer]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(global.renderer.window);
