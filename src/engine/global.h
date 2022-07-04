@@ -11,8 +11,10 @@ typedef struct global {
 } Global;
 
 extern Global global;
+extern f32 mousePosX, mousePosY;
 
 void window_init(Global * global);
 void processInput(GLFWwindow *window, Camera *c);
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 
 #endif

@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "camera.h": "c",
-        "render.h": "c"
+        "render.h": "c",
+        "types.h": "c",
+        "cglm.h": "c"
     }
 }

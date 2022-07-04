@@ -18,9 +18,10 @@
 #include <cglm/types.h>
 #include <primatives.h>
 #include <render/camera.h>
+Global global = {0};
 
 int main(int argc, char * argv[]){
-    Global global = {0};
+    //Global global = {0};
     global.renderer.width = 800;
     global.renderer.height = 600;
 
@@ -111,13 +112,14 @@ int main(int argc, char * argv[]){
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
 
+
         use(obj.shader.ID);
         mat4 view;
         vec3 addvec;
         glm_vec3_add(global.camera.pos, global.camera.front, addvec);
         glm_lookat(global.camera.pos, addvec, global.camera.up, view);
         setMat4("view", view, obj.shader.ID);
-        
+        glm_perspective(glm_rad(45.0f), global.renderer.width / global.renderer.height, 0.1f, 100.0f, global.camera.projection);        
 
         //mat4 view  = GLM_MAT4_IDENTITY_INIT;
         //glm_translate(view, (vec3){0.0f, 0.0f, -3.0f});
