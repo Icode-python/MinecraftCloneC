@@ -2,7 +2,7 @@ include = -I src/engine
 lib = -I lib
 build_dir = build/
 lib_files = lib/*.c 
-src_files = src/*.c src/engine/io/*.c src/engine/render/*.c
+src_files = src/*.c src/engine/io/*.c src/engine/render/*.c src/engine/*.c
 libs = -lGL -lglfw -ldl -lm -lcglm
 out_file = game
 .PHONY: build

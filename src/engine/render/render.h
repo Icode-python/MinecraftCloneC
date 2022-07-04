@@ -12,7 +12,7 @@
 typedef struct object {
     Shader shader;
     u32 texture;
-    float vertices[64];
+    float vertices[1000];
     u32 indices[12];
     u32 arrayBuffer;
 } Object;

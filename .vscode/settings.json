@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "camera.h": "c",
+        "render.h": "c"
+    }
+}
