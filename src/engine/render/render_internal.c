@@ -12,37 +12,26 @@
 #include <types.h>
 #include <render/render.h>
 #include <render/texture.h>
+#include <primatives.h>
+#include <render/entities.h>
 
-int renderInternalInit(Render_Internal * r, size_t size){
-    initArray(&r->VAO,size);
-    initArray(&r->VBO,size);
-    initArray(&r->EBO,size);
-}
-
-int objectRendererInit(Object * obj, Render_Internal *r){
-    u32 i;
-    glGenVertexArrays(1, &i);
-    insertArrayU32(&r->VAO,i);
-    u32 arrPos = findElement(&r->VAO,i);
-    obj->arrayBuffer = arrPos;
-    
-    glGenBuffers(1, &i);
-    insertArrayU32(&r->EBO,i);
-    glGenBuffers(1, &i);
-    insertArrayU32(&r->VBO,i);
+int RendererInitCube(Render_Internal *r){
+    glGenVertexArrays(1, &r->VAO);
+    glGenBuffers(1, &r->VBO);
+    glGenBuffers(1, &r->EBO);
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(r->VAO.iArray[arrPos]);
+    glBindVertexArray(r->VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, r->VBO.iArray[arrPos]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(obj->vertices), obj->vertices, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, r->VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_DYNAMIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r->EBO.iArray[arrPos]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(obj->indices), obj->indices, GL_DYNAMIC_DRAW);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r->EBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(obj->indices), obj->indices, GL_DYNAMIC_DRAW);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // texture coord attribute
+    // texture coord attribute (uv)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
@@ -74,22 +63,22 @@ int texInit(const char * path, u32 * texture, bool flip, bool has_rgba){
     stbi_image_free(data);
 }
 
-void setupObject(Object * obj, vec3 pos, Shader *shader, u32 texture, f32 vertices[200], Render_Internal * r){
-    memcpy(obj->vertices, vertices, sizeof(obj->vertices));
-    objectRendererInit(obj,r);
-    obj->shader.ID = shader->ID;
+void setupObject(Object * obj, vec3 pos,u32 texture){
     obj->texture = texture;
     glm_vec3_copy(pos,obj->pos);
 }
 
-void set_render(Object * obj, Camera * c){
-    use(obj->shader.ID); 
-    setInt("texture1", 0, obj->shader.ID);
-    glBindTexture(GL_TEXTURE_2D, obj->texture);
-    setMat4("projection", c->projection, obj->shader.ID);
-    setMat4("view", c->view, obj->shader.ID);
+void render_begin(Camera * c){
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    use(global.renderInternal.shader.ID); 
+    setInt("texture1", 0, global.renderInternal.shader.ID);
+    glBindTexture(GL_TEXTURE_2D, global.renderInternal.texture);
+    setMat4("projection", c->projection, global.renderInternal.shader.ID);
+    setMat4("view", c->view, global.renderInternal.shader.ID);
 }
-void render(Object * obj, Render_Internal * r){
-    glBindVertexArray(r->VAO.iArray[obj->arrayBuffer]);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+void render_end(){
+    glfwSwapBuffers(global.renderer.window);
+    glfwPollEvents();  
 }

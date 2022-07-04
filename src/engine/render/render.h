@@ -13,19 +13,13 @@
 #include <cglm/types.h>
 #include <render/camera.h>
 
-typedef struct object {
-    Shader shader;
-    u32 texture;
-    vec3 pos;
-    f32 vertices[1000];
-    u32 indices[12];
-    u32 arrayBuffer;
-} Object;
 
 typedef struct render_internal{
-    Array VAO;
-    Array VBO;
-    Array EBO;
+    u32 VAO;
+    u32 VBO;
+    u32 EBO;
+    Shader shader;
+    u32 texture;
 }Render_Internal;
 
 typedef struct render {
@@ -34,10 +28,7 @@ typedef struct render {
     f32 height;
 } Render;
 
-void setupObject(Object * obj, vec3 pos, Shader *shader, u32 texture, f32 vertices[200], Render_Internal * r);
-int objectRendererInit(Object * obj, Render_Internal * r);
-int renderInternalInit(Render_Internal * r, size_t size);
-void set_render(Object * obj, Camera * c);
-void render(Object * obj, Render_Internal * r);
-
+int RendererInitCube(Render_Internal *r);
+void render_begin(Camera * c);
+void render_end();
 #endif

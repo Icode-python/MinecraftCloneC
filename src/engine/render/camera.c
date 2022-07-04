@@ -6,6 +6,8 @@
 #include <render/camera.h>
 #include <math.h>
 #include <stdbool.h>
+#include <primatives.h>
+#include <render/entities.h>
 
 void setupCamera(vec3 initPos, vec3 front, vec3 up, f32 speed, Camera * c, f32 screenWidth, f32 screenHeight, f32 sensitivity){
     glm_vec3_copy(initPos, c->pos);
