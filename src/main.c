@@ -17,32 +17,31 @@
 #include <cglm/mat4.h>
 #include <cglm/types.h>
 #include <primatives.h>
-#include <render/camera.h>
-#include <render/entities.h>
-Global global = {0};
+#include <camera/camera.h>
+#include <block/entities.h>
 
 int main(int argc, char * argv[]){
     //Global global = {0};
-    global.renderer.width = 940;
-    global.renderer.height = 620;
+    global.renderer.width = 856;
+    global.renderer.height = 482;
 
     window_init(&global);
-    RendererInitCube(&global.renderInternal);
+    RendererInitCube(&global.state);
     
-    Object obj[2][10][10];
+    Entity obj[2][10][10];
     vec3 cubePositions[2][10][10];
-    texInit((const char *)"shaders/grass.jpg", &global.renderInternal.texture, false, false);
-    setUpShaders((const char *)"shaders/triangleShader.vert", (const char *)"shaders/triangleShader.frag", &global.renderInternal.shader);
+    texInit((const char *)"shaders/grass.jpg", &global.state.texture, false, false);
+    shader_create((const char *)"shaders/triangleShader.vert", (const char *)"shaders/triangleShader.frag", &global.state.shader);
     for(int y=0; y<2; y++){
         for(int x=0; x<10; x++){
             for(int z=0; z<10; z++){
                 glm_vec3_copy((vec3){(f32)x, (f32)y, (f32)z},cubePositions[y][x][z]); 
-                setupObject(&obj[y][x][z], cubePositions[y][x][z], global.renderInternal.texture);
+                entity_init(&obj[y][x][z], cubePositions[y][x][z], global.state.texture);
             }
         }
     }
-    //memcpy(obj.indices, indices, sizeof(obj.indices));
 
+    
     while(!glfwWindowShouldClose(global.renderer.window)){
         processInput(global.renderer.window,&global.camera);
         setCameraView(&global.camera,global.renderer.width,global.renderer.height);
@@ -51,15 +50,12 @@ int main(int argc, char * argv[]){
         for(int y=0; y<2; y++){
             for(int x=0; x<10; x++){
                 for(int z=0; z<10; z++){
-                    use(global.renderInternal.shader.ID);
+                    use(global.state.shader.ID);
 
-                    mat4 model = GLM_MAT4_IDENTITY_INIT;
-                    glm_translate(model, cubePositions[y][x][z]);
-                    setMat4("model", model,global.renderInternal.shader.ID);
+                    Translate(cubePositions[y][x][z], global.state.shader.ID);
 
-                    glBindVertexArray(global.renderInternal.VAO);
+                    glBindVertexArray(global.state.VAO);
                     glDrawArrays(GL_TRIANGLES, 0, allFaces);
-
                     //printf("x: %f,y: %f,z: %f,#x %d,#y %d\n", obj[x][y].pos[0],obj[x][y].pos[1],obj[x][y].pos[2],x,y);
                 }
             }

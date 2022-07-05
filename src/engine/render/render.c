@@ -11,10 +11,10 @@
 #include <stdbool.h>
 #include <types.h>
 #include <render/render.h>
-#include <render/camera.h>
+#include <camera/camera.h>
 #include <global.h>
 #include <primatives.h>
-#include <render/entities.h>
+#include <block/entities.h>
 
 void window_init(Global * global){
     glfwInit();
@@ -63,46 +63,3 @@ void mouse_callback(GLFWwindow* window, f64 xposIn, f64 yposIn){
     */
 }
 
-void processInput(GLFWwindow *window, Camera *c){
-    vec3 dest = GLM_VEC3_ONE_INIT;
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
-        glfwSetWindowShouldClose(window, 1);
-    }
-    if(glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
-        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    }
-    if(glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS){
-        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-    }
-    if(glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS){
-        glm_vec3_copy((vec3){0.0,0.0,4.0},c->pos);
-    }
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-        glm_vec3_mul(c->front,(vec3){c->speed[0],0.0,c->speed[2]},dest);
-        glm_vec3_normalize(dest);
-        glm_vec3_mul(dest,(vec3){c->speed[0],0.0,c->speed[2]},dest);
-        glm_vec3_add(c->pos,dest,c->pos);
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-        glm_vec3_mul(c->front,(vec3){c->speed[0],0.0,c->speed[2]},dest);
-        glm_vec3_normalize(dest);
-        glm_vec3_mul(dest,(vec3){c->speed[0],0.0,c->speed[2]},dest);
-        glm_vec3_sub(c->pos,dest,c->pos);
-    }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-        glm_cross(c->front,c->up,dest); glm_normalize(dest);
-        glm_vec3_mul(dest,c->speed,dest); glm_vec3_sub(c->pos,dest,c->pos);
-    }   
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-        glm_cross(c->front,c->up,dest); glm_normalize(dest);
-        glm_vec3_mul(dest,c->speed,dest); glm_vec3_add(c->pos,dest,c->pos);
-    }
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-        glm_vec3_add(c->up, (vec3){0.0f,0.1f,0.0f}, dest);
-        glm_normalize(dest); glm_vec3_mul(dest,c->speed,dest); glm_vec3_add(c->pos,dest,c->pos);
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-        glm_vec3_add(c->up, (vec3){0.0f,0.1f,0.0f}, dest);
-        glm_normalize(dest); glm_vec3_mul(dest,c->speed,dest); glm_vec3_sub(c->pos,dest,c->pos);
-    }
-}

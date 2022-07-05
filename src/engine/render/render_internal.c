@@ -13,13 +13,13 @@
 #include <render/render.h>
 #include <render/texture.h>
 #include <primatives.h>
-#include <render/entities.h>
+#include <block/entities.h>
 
-int RendererInitCube(Render_Internal *r){
+int RendererInitCube(Render_State_Internal *r){
     glGenVertexArrays(1, &r->VAO);
     glGenBuffers(1, &r->VBO);
     glGenBuffers(1, &r->EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    // bind the Vertex Array Entityfirst, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(r->VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, r->VBO);
@@ -63,19 +63,21 @@ int texInit(const char * path, u32 * texture, bool flip, bool has_rgba){
     stbi_image_free(data);
 }
 
-void setupObject(Object * obj, vec3 pos,u32 texture){
-    obj->texture = texture;
-    glm_vec3_copy(pos,obj->pos);
+void Translate(vec3 pos, u32 ID){
+    mat4 model = GLM_MAT4_IDENTITY_INIT;
+    glm_translate(model, pos);
+    setMat4("model", model,ID);
 }
+
 
 void render_begin(Camera * c){
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    use(global.renderInternal.shader.ID); 
-    glBindTexture(GL_TEXTURE_2D, global.renderInternal.texture);
-    setInt("texture1", 0, global.renderInternal.shader.ID);
-    setMat4("projection", c->projection, global.renderInternal.shader.ID);
-    setMat4("view", c->view, global.renderInternal.shader.ID);
+    use(global.state.shader.ID); 
+    glBindTexture(GL_TEXTURE_2D, global.state.texture);
+    setInt("texture1", 0, global.state.shader.ID);
+    setMat4("projection", c->projection, global.state.shader.ID);
+    setMat4("view", c->view, global.state.shader.ID);
 }
 
 void render_end(){

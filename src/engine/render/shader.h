@@ -12,7 +12,7 @@ typedef struct shader{
     u32 ID;
 }Shader;
 
-void setUpShaders(const char* vertexPath, const char* fragmentPath, Shader * a);
+void shader_create(const char* vertexPath, const char* fragmentPath, Shader * a);
 // use/activate the shader
 void use(u32 ID);
 // utility uniform functions

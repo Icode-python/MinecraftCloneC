@@ -1,10 +1,7 @@
 {
     "files.associations": {
-        "camera.h": "c",
-        "render.h": "c",
         "types.h": "c",
-        "cglm.h": "c",
-        "primatives.h": "c",
-        "stdio.h": "c"
+        "render.h": "c",
+        "entities.h": "c"
     }
 }

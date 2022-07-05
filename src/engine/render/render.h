@@ -11,7 +11,7 @@
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
 #include <cglm/types.h>
-#include <render/camera.h>
+#include <camera/camera.h>
 
 
 typedef struct render_internal{
@@ -20,7 +20,7 @@ typedef struct render_internal{
     u32 EBO;
     Shader shader;
     u32 texture;
-}Render_Internal;
+}Render_State_Internal;
 
 typedef struct render {
     GLFWwindow * window;
@@ -28,7 +28,8 @@ typedef struct render {
     f32 height;
 } Render;
 
-int RendererInitCube(Render_Internal *r);
+int RendererInitCube(Render_State_Internal *r);
+void Translate(vec3 pos, u32 ID);
 void render_begin(Camera * c);
 void render_end();
 #endif

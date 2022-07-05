@@ -15,7 +15,7 @@
 
 
 
-void setUpShaders(const char* vertexPath, const char* fragmentPath, Shader * a){
+void shader_create(const char* vertexPath, const char* fragmentPath, Shader * a){
     u32 vertex, fragment;
 
     Array fragmentarr;

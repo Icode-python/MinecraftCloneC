@@ -3,7 +3,7 @@
 #include <string.h>
 #include <types.h>
 #include <primatives.h>
-#include <render/entities.h>
+#include <block/entities.h>
 
 f32 cube_vertices[180] = {
 //-z

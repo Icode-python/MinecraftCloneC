@@ -11,14 +11,20 @@
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
 #include <cglm/types.h>
-#include <render/camera.h>
+#include <camera/camera.h>
 #include <render/render.h>
 
-typedef struct object {
+typedef enum{
+    AIR = 0,
+    GRASS = 1
+} BLOCK_TYPE;
+
+typedef struct entity {
     u32 texture;
     vec3 pos;
-} Object;
+    BLOCK_TYPE ID;
+} Entity ;
 
-void setupObject(Object * obj, vec3 pos,u32 texture);
+void entity_init(Entity * obj, vec3 pos,u32 texture);
 
 #endif

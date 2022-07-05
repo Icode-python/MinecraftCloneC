@@ -9,7 +9,7 @@
 #include <types.h>
 #include <render/render.h>
 #include <stdbool.h>
-#include <render/entities.h>
+#include <block/entities.h>
 
 int texInit(const char * path, u32 * texture, bool flip, bool has_rgba);
 
