@@ -27,7 +27,7 @@ void window_init(Global * global){
     glfwSetInputMode(global->renderer.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
     glfwSetCursorPosCallback(global->renderer.window, mouse_callback);  
     glViewport(0, 0, global->renderer.width, global->renderer.height);
-    setupCamera((vec3){0.0f, 0.0f,  3.0f}, (vec3){0.0f, 0.0f, -1.0f}, (vec3){0.0f, 1.0f,  0.0f}, 0.2, &global->camera, global->renderer.width, global->renderer.height, 0.1f);
+    setupCamera((vec3){0.0f, 4.0f,  3.0f}, (vec3){0.0f, 0.0f, -1.0f}, (vec3){0.0f, 1.0f,  0.0f}, 0.2, &global->camera, global->renderer.width, global->renderer.height, 0.1f);
     glEnable(GL_DEPTH_TEST);
     
 }

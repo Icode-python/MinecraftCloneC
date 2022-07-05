@@ -72,8 +72,8 @@ void render_begin(Camera * c){
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     use(global.renderInternal.shader.ID); 
-    setInt("texture1", 0, global.renderInternal.shader.ID);
     glBindTexture(GL_TEXTURE_2D, global.renderInternal.texture);
+    setInt("texture1", 0, global.renderInternal.shader.ID);
     setMat4("projection", c->projection, global.renderInternal.shader.ID);
     setMat4("view", c->view, global.renderInternal.shader.ID);
 }
