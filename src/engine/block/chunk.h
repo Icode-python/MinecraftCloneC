@@ -15,9 +15,15 @@
 #include <render/render.h>
 #include <block/entities.h>
 
+typedef enum {
+  CHUNK_Z_SIZE = 16,
+  CHUNK_X_SIZE = 16,
+  CHUNK_Y_SIZE = 256
+} CHUNK_SIZE;
+
 typedef struct chunk{
-  Entity blocks[256][16][16];
-  vec3 positions[256][16][16];
+  Entity blocks[CHUNK_Y_SIZE][CHUNK_X_SIZE][CHUNK_Z_SIZE];
+  vec3 positions[CHUNK_Y_SIZE][CHUNK_X_SIZE][CHUNK_Z_SIZE];
 } Chunk;
 
 typedef struct {
@@ -26,5 +32,9 @@ typedef struct {
   size_t size;
 } chunk_array;
 
+
+void chunk_init(Chunk * self);
+void render_chunk(Chunk *self);
+void render_shown(Chunk * chunk, Entity * self);
 
 #endif

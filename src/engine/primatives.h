@@ -12,8 +12,8 @@ extern f32 cube_vertices[180];
 #define PosXFace 18
 #define negXFace 12
 
-#define PosYFace 24
-#define negYFace 16
+#define PosYFace 30
+#define negYFace 24
 
 #define PosZFace 6
 #define negZFace 0

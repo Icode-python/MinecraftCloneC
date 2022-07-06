@@ -25,6 +25,6 @@ typedef struct entity {
     BLOCK_TYPE ID;
 } Entity ;
 
-void entity_init(Entity * obj, vec3 pos,u32 texture);
+void entity_init(Entity * self, vec3 pos,u32 texture,u32 BlockID);
 
 #endif
